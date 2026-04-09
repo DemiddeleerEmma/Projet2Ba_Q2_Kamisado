@@ -3,10 +3,24 @@ import threading
 import sys
 import struct
 import json
+
 ##===========configuration===========
 PORT = 8888
 NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
+
+##===========Générer tous les moves legaux===========
+
+#jouer le pions de la bonne couleur
+#Pions blancs: Déplacement uniquement vers le bas (vertical ET diagonal)
+#Pions noirs: Déplacement uniquement vers le haut (vertical ET diagonal)
+#Grille 8x8 -> rester dans la grille
+#Ne pas se poser sur une case où il y a déjà un pion
+#Ne pas passer au dessus d'un pion
+#si pas de move possible, rester sur place
+
+#le respect de toutes ces regles renvoient un coup légal
+
 ##===========Serveur TCP===========
 #Repondre aux requêtes PING et PLAY
 def start_serveur():
@@ -38,7 +52,7 @@ def start_serveur():
         s.listen()
         
         while True:
-            client, adresse = s.accept()  # On accepte la connexion depuis s
+            client, adresse = s.accept()
             threading.Thread(target=handle_client, args=(client, adresse), daemon=True).start()
 
     threading.Thread(target=loop, daemon=True).start()
