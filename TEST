@@ -64,7 +64,7 @@ def register(host, port):
     response = s.recv(length).decode()
     s.close()
 
-##LANCER LE JEU
+##===========LANCER LE JEU===========
 def main():
 
     host = sys.argv[1]
@@ -78,6 +78,6 @@ def main():
             pass
         except KeyboardInterrupt:
             break
-        
+
 if __name__ == "__main__":
     main()
