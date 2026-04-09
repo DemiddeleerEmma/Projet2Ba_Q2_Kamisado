@@ -13,7 +13,7 @@ def start_serveur():
     def handle_client(client,adresse):
         with client:
             raw_length = client.recv(4)
-            length = struct.unpack('!I', raw_length)[0]
+            length = struct.unpack('I', raw_length)[0]
             data = client.recv(length).decode().strip()
 
             if not data:
@@ -24,7 +24,7 @@ def start_serveur():
             if req["request"] == "ping":
                 res = {"response": "pong"}
                 msg = json.dumps(res).encode()
-                client.sendall(struct.pack('!I', len(msg)))
+                client.sendall(struct.pack('I', len(msg)))
                 client.sendall(msg)
 
             elif req["request"] == "play":
@@ -56,11 +56,11 @@ def register(host, port):
         "matricules": MATRICULES
     }
     msg = json.dumps(message).encode()
-    s.sendall(struct.pack('!I', len(msg)))
+    s.sendall(struct.pack('I', len(msg)))
     s.sendall(msg)
 
     raw_length = s.recv(4)
-    length = struct.unpack('!I', raw_length)[0]
+    length = struct.unpack('I', raw_length)[0]
     response = s.recv(length).decode()
     s.close()
 
