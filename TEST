@@ -65,5 +65,19 @@ def register(host, port):
     s.close()
 
 ##LANCER LE JEU
+def main():
+
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+
+    start_serveur() 
+    register(host, port)
+
+    while True:
+        try:
+            pass
+        except KeyboardInterrupt:
+            break
+        
 if __name__ == "__main__":
-    pass
+    main()
