@@ -1,17 +1,20 @@
 import socket
 import threading
 import sys
+import struct
 import json
 ##===========configuration===========
 PORT = 8888
 NAME = "Les Infernales"
-MATRICULE = ["24164","24374"]
+MATRICULES = ["24164","24374"]
 ##===========Serveur TCP===========
 #Repondre aux requêtes PING et PLAY
 def start_serveur():
     def handle_client(client,adresse):
         with client:
-            data = client.recv(2048).decode().strip()
+            raw_length = client.recv(4)
+            length = struct.unpack('!I', raw_length)[0]
+            data = client.recv(length).decode().strip()
 
             if not data:
                 return
@@ -19,23 +22,48 @@ def start_serveur():
             req = json.loads(data)
 
             if req["request"] == "ping":
-                res = "response" == "pong"
-                client.sendall((json.dumps(res) + "\n").encode())
+                res = {"response": "pong"}
+                msg = json.dumps(res).encode()
+                client.sendall(struct.pack('!I', len(msg)))
+                client.sendall(msg)
 
             elif req["request"] == "play":
                ##REPONSE SELON NOS FONCTIONS
                pass
     
     def loop():
-    s = socket.socket()
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind(("0.0.0.0", PORT))
-    s.listen()
-    
-    while True:
-        client, adresse = s.accept()  # On accepte la connexion depuis s
-        threading.Thread(target=handle_client, args=(client, adresse), daemon=True).start()
+        s = socket.socket()
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind(("0.0.0.0", PORT))
+        s.listen()
         
+        while True:
+            client, adresse = s.accept()  # On accepte la connexion depuis s
+            threading.Thread(target=handle_client, args=(client, adresse), daemon=True).start()
+
     threading.Thread(target=loop, daemon=True).start()
         
+####===========Inscrire l'IA au tournoi##===========
 
+def register(host, port):
+    s = socket.socket()
+    s.connect((host, port))
+
+    message = {
+        "request": "subscribe",
+        "port": PORT,
+        "name": NAME,
+        "matricules": MATRICULES
+    }
+    msg = json.dumps(message).encode()
+    s.sendall(struct.pack('!I', len(msg)))
+    s.sendall(msg)
+
+    raw_length = s.recv(4)
+    length = struct.unpack('!I', raw_length)[0]
+    response = s.recv(length).decode()
+    s.close()
+
+##LANCER LE JEU
+if __name__ == "__main__":
+    pass
