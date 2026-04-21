@@ -10,6 +10,15 @@ NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
 
 ##===========Générer tous les moves legaux===========
+def legal_move(state):
+    board = state["board"]
+    current = state["current"]
+    forced_color = state["color"]
+
+    legal_moves = []
+
+
+    return legal_moves
 
 #jouer le pions de la bonne couleur
 #Pions blancs: Déplacement uniquement vers le bas (vertical ET diagonal)
