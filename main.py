@@ -135,8 +135,13 @@ def register(host, port):
 ##===========LANCER LE JEU===========
 def main():
 
+    if len(sys.argv) < 3:
+        print("Usage: python main.py <host> <port>")
+        return
+
     host = sys.argv[1]
     port = int(sys.argv[2])
+
 
     start_serveur() 
     register(host, port)
