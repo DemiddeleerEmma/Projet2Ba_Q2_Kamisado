@@ -68,7 +68,7 @@ def legal_move(state):
 
 ##===========Stratégie===========
 
-def victory(state):
+def victory_conditions(state):
     board = state["board"]
 
     for c in range(8):
@@ -80,30 +80,6 @@ def victory(state):
         tile = board[0][c][1]
         if tile is not None and tile[1] == "dark":
             return True
-
-    return False
-
-def gameOver(state):
-       
-    board = state["board"]
-
-    for c in range(8):
-        cell = board[7][c]
-        piece = cell[1]
-
-        if piece is not None:
-            color, kind = piece
-            if kind == "light":
-                return True
-
-    for c in range(8):
-        cell = board[0][c]
-        piece = cell[1]
-
-        if piece is not None:
-            color, kind = piece
-            if kind == "dark":
-                return True
 
     return False
 
