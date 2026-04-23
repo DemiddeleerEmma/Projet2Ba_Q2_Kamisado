@@ -3,6 +3,7 @@ import threading
 import sys
 import struct
 import json
+import random
 
 ##===========configuration===========
 PORT = 8888
@@ -10,11 +11,12 @@ NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
 
 ##===========Générer tous les moves legaux===========
+legal_moves = []
+
 def legal_move(state):
     board = state["board"]
     current = state["current"]
     forced_color = state["color"]
-    legal_moves = []
 
 
     if forced_color is None:
@@ -62,8 +64,6 @@ def legal_move(state):
         
     return legal_moves
 
-#si pas de move possible, rester sur place
-
 
 ##===========Serveur TCP===========
 #Repondre aux requêtes PING et PLAY
@@ -86,8 +86,18 @@ def start_serveur():
                 client.sendall(msg)
 
             elif req["request"] == "play":
-               ##REPONSE SELON NOS FONCTIONS
-               pass
+               state = req["state"]
+               moves = legal_move(state)
+               move = random.choice(moves)
+
+               res= {
+                   "response":"move",
+                   "move" : move
+               }
+
+               msg = json.dumps(res).encode()
+               client.sendall(struct.pack('I',len(msg)))
+               client.sendall(msg)
     
     def loop():
         s = socket.socket()
