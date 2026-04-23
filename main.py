@@ -18,8 +18,7 @@ def legal_move(state):
 
 
     if forced_color is None:
-        #on choisi un coup qu'on fera toujours quand on commence
-        pass
+        legal_moves.append = ([[7, 4], [4, 4]])        
 
     else:
 
