@@ -16,19 +16,39 @@ def legal_move(state):
     forced_color = state["color"]
 
     legal_moves = []
+    for r in range(8):
+        for c in range(8):
+            tile = board[r][c][tile]
+            if tile is None:
+                continue
 
+            color, kind = tile
+
+            if kind != ["dark","light"][current]:
+                continue
+
+            if forced_color is not None and color != forced_color:
+                continue
+
+            if kind == "light":
+                directions = [(1,0),(1,1),(1,-1)]
+            else:
+                directions = [(-1,0),(-1,-1),(-1,1)]
+
+                while 0 <= nr < 8 and 0 <= nc < 8:
+                    # case occupée → stop
+                    if board[nr][nc][TILE] is not None:
+                        break
+
+                    moves.append([[r, c], [nr, nc]])
+
+                    nr += dr
+                    nc += dc
 
     return legal_moves
 
-#jouer le pions de la bonne couleur
-#Pions blancs: Déplacement uniquement vers le bas (vertical ET diagonal)
-#Pions noirs: Déplacement uniquement vers le haut (vertical ET diagonal)
-#Grille 8x8 -> rester dans la grille
-#Ne pas se poser sur une case où il y a déjà un pion
-#Ne pas passer au dessus d'un pion
 #si pas de move possible, rester sur place
 
-#le respect de toutes ces regles renvoient un coup légal
 
 ##===========Serveur TCP===========
 #Repondre aux requêtes PING et PLAY
