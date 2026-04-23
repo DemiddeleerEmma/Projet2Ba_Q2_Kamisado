@@ -20,7 +20,7 @@ def legal_move(state):
 
 
     if forced_color is None:
-        legal_moves.append = ([[7, 4], [4, 4]])        
+        legal_moves.append([[7, 4], [4, 4]])        
 
     else:
 
@@ -128,6 +128,11 @@ def register(host, port):
     s.sendall(msg)
 
     raw_length = s.recv(4)
+
+    if len(raw_length) != 4:
+        print("Serveur n'a pas répondu")
+        return
+
     length = struct.unpack('I', raw_length)[0]
     response = s.recv(length).decode()
     s.close()
