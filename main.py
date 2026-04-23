@@ -70,6 +70,9 @@ def legal_move(state):
 #Repondre aux requêtes PING et PLAY
 def start_serveur():
     def handle_client(client,adresse):
+        
+        print("Connexion reçue")
+
         with client:
             raw_length = client.recv(4)
             length = struct.unpack('I', raw_length)[0]
@@ -81,12 +84,15 @@ def start_serveur():
             req = json.loads(data)
 
             if req["request"] == "ping":
+                print("request reçue")
                 res = {"response": "pong"}
+                print("pong envoyé")
                 msg = json.dumps(res).encode()
                 client.sendall(struct.pack('I', len(msg)))
                 client.sendall(msg)
 
             elif req["request"] == "play":
+               print("demande de jeu")
                state = req["state"]
                moves = legal_move(state)
                move = random.choice(moves)
@@ -95,6 +101,7 @@ def start_serveur():
                    "response":"move",
                    "move" : move
                }
+               print(move)
                msg = json.dumps(res).encode()
                client.sendall(struct.pack('I',len(msg)))
                client.sendall(msg)
