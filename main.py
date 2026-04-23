@@ -4,6 +4,7 @@ import sys
 import struct
 import json
 import random
+from copy import deepcopy
 
 ##===========configuration===========
 PORT = 8888
@@ -69,7 +70,7 @@ def legal_move(state):
 
 def victory(state):
     board = state["board"]
-    
+
     for c in range(8):
         tile = board[7][c][1]
         if tile is not None and tile[1] == "light":
@@ -79,6 +80,30 @@ def victory(state):
         tile = board[0][c][1]
         if tile is not None and tile[1] == "dark":
             return True
+
+    return False
+
+def gameOver(state):
+       
+    board = state["board"]
+
+    for c in range(8):
+        cell = board[7][c]
+        piece = cell[1]
+
+        if piece is not None:
+            color, kind = piece
+            if kind == "light":
+                return True
+
+    for c in range(8):
+        cell = board[0][c]
+        piece = cell[1]
+
+        if piece is not None:
+            color, kind = piece
+            if kind == "dark":
+                return True
 
     return False
 
