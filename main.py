@@ -14,37 +14,53 @@ def legal_move(state):
     board = state["board"]
     current = state["current"]
     forced_color = state["color"]
-
     legal_moves = []
-    for r in range(8):
-        for c in range(8):
-            tile = board[r][c][tile]
-            if tile is None:
-                continue
 
-            color, kind = tile
 
-            if kind != ["dark","light"][current]:
-                continue
+    if forced_color is None:
+        #on choisi un coup qu'on fera toujours quand on commence
+        pass
 
-            if forced_color is not None and color != forced_color:
-                continue
+    else:
 
-            if kind == "light":
-                directions = [(1,0),(1,1),(1,-1)]
-            else:
-                directions = [(-1,0),(-1,-1),(-1,1)]
+        for r in range(8):
+            for c in range(8):
+                tile = board[r][c][TILE]
+                if tile is None:
+                    continue
 
-                while 0 <= nr < 8 and 0 <= nc < 8:
-                    # case occupée → stop
-                    if board[nr][nc][TILE] is not None:
-                        break
+                color, kind = tile
 
-                    legal_moves.append([[r, c], [nr, nc]])
+                if kind != ["dark","light"][current]:
+                    continue
 
-                    nr += dr
-                    nc += dc
+                if forced_color is not None and color != forced_color:
+                    continue
 
+                if kind == "light":
+                    directions = [(1,0),(1,1),(1,-1)]
+                else:
+                    directions = [(-1,0),(-1,-1),(-1,1)]
+                
+
+
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+
+                    while 0 <= nr < 8 and 0 <= nc < 8:
+
+                        if board[nr][nc][TILE] is not None:
+                            break
+
+                        legal_moves.append([[r, c], [nr, nc]])
+
+                        nr += dr
+                        nc += dc
+                
+                if legal_moves == []:
+                    legal_moves = ([[r, c], [r, c]])
+
+        
     return legal_moves
 
 #si pas de move possible, rester sur place
