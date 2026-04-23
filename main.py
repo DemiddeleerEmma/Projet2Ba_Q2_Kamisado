@@ -11,12 +11,13 @@ NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
 
 ##===========Générer tous les moves legaux===========
-legal_moves = []
 
 def legal_move(state):
     board = state["board"]
     current = state["current"]
     forced_color = state["color"]
+    legal_moves = []
+
 
 
     if forced_color is None:
@@ -94,10 +95,11 @@ def start_serveur():
                    "response":"move",
                    "move" : move
                }
-
                msg = json.dumps(res).encode()
                client.sendall(struct.pack('I',len(msg)))
                client.sendall(msg)
+        print(move)
+
     
     def loop():
         s = socket.socket()
@@ -146,6 +148,7 @@ def main():
 
     host = sys.argv[1]
     port = int(sys.argv[2])
+    
 
 
     start_serveur() 
