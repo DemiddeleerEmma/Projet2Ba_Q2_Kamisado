@@ -27,7 +27,7 @@ def legal_move(state):
 
         for r in range(8):
             for c in range(8):
-                tile = board[r][c][TILE]
+                tile = board[r][c][1]
                 if tile is None:
                     continue
 
@@ -51,7 +51,7 @@ def legal_move(state):
 
                     while 0 <= nr < 8 and 0 <= nc < 8:
 
-                        if board[nr][nc][TILE] is not None:
+                        if board[nr][nc][1] is not None:
                             break
 
                         legal_moves.append([[r, c], [nr, nc]])
@@ -98,7 +98,6 @@ def start_serveur():
                msg = json.dumps(res).encode()
                client.sendall(struct.pack('I',len(msg)))
                client.sendall(msg)
-        print(move)
 
     
     def loop():
