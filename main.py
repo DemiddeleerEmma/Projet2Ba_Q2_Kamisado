@@ -40,7 +40,7 @@ def legal_move(state):
                     if board[nr][nc][TILE] is not None:
                         break
 
-                    moves.append([[r, c], [nr, nc]])
+                    legal_moves.append([[r, c], [nr, nc]])
 
                     nr += dr
                     nc += dc
