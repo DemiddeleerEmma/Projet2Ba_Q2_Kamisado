@@ -65,6 +65,23 @@ def legal_move(state):
         
     return legal_moves
 
+##===========Stratégie===========
+
+def victory(state):
+    board = state["board"]
+    
+    for c in range(8):
+        tile = board[7][c][1]
+        if tile is not None and tile[1] == "light":
+            return True
+
+    for c in range(8):
+        tile = board[0][c][1]
+        if tile is not None and tile[1] == "dark":
+            return True
+
+    return False
+
 
 ##===========Serveur TCP===========
 #Repondre aux requêtes PING et PLAY
