@@ -84,6 +84,76 @@ def victory_conditions(state):
     return False
 
 
+
+def position_score(state):
+    board = state["board"]
+    player = state["current"]
+
+    score = 0
+
+
+    for r in range(8):
+        for c in range(8):
+            tile = board[r][c][1]
+            if tile is None:
+                continue
+
+            color, kind = tile
+
+
+            if kind == "dark":
+                score += (7 - r) * 8 
+            else:
+                score -= r * 8
+
+
+    moves = legal_move(state)
+    score += len(moves) * 4
+
+
+    center = [2, 3, 4, 5]
+
+    for r in range(8):
+        for c in center:
+            tile = board[r][c][1]
+            if tile is None:
+                continue
+
+            color, kind = tile
+
+            if player == 0 and kind == "dark":
+                score += 3
+            elif player == 1 and kind == "light":
+                score += 3
+
+    return score
+
+
+# 1) si un coup est gagnant, on va le jouer +1000
+# 2) si un coup offre une victoire à l'adversaire, on ne va pas le jouer -500
+# 3) prioriser les positions centrales
+# 4) Garder beaucoup de mobilité (ne pas bloquer un pion)
+
+def evaluate(state):
+    board = state["board"]
+    score = 0
+
+    for r in range(8):
+        for c in range(8):
+            tile = board[r][c][1]
+            if tile is None:
+                continue
+
+            color, kind = tile
+
+            #avancement, gérer le gain selon si on veut un bot aggressif ou pas
+            if kind == "light":
+                score += r * 6
+            else:
+                score -= (7 - r) * 6
+
+
+
 ##===========Serveur TCP===========
 def start_serveur():
     def handle_client(client, adresse):
