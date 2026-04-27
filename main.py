@@ -154,6 +154,7 @@ def evaluate(state):
             tile = board[r][c][1]
             if tile is None:
                 continue
+
             color, kind = tile
             #centre
             if c in center_cols:
@@ -161,11 +162,20 @@ def evaluate(state):
             #avancement
             if kind == "dark":
                 progress = (7 - r)   # noir avance vers le haut
-                score =+ progress * 5
+                score += progress * 5
             else:
                 progress = r         # blanc avance vers le bas
-                score =+ progress * 5
+                score += progress * 5
     return score
+
+def minimax(state, depth, alpha, beta, maximizing):
+    if victory_conditions(state):
+        return 10000 if maximizing else -10000
+    if depth == 0:
+       return evaluate(state)
+
+
+
 
 
 ##===========Serveur TCP===========
