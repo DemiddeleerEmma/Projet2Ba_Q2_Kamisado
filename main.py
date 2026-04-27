@@ -84,69 +84,19 @@ def victory_conditions(state):
     return False
 
 
-
-def position_score(state):
-    board = state["board"]
-    player = state["current"]
-
-    score = 0
-
-
-    for r in range(8):
-        for c in range(8):
-            tile = board[r][c][1]
-            if tile is None:
-                continue
-
-            color, kind = tile
-
-
-            if kind == "dark":
-                score += (7 - r) * 8 
-            else:
-                score -= r * 8
-
-
-    moves = legal_move(state)
-    score += len(moves) * 4
-
-
-    center = [2, 3, 4, 5]
-
-    for r in range(8):
-        for c in center:
-            tile = board[r][c][1]
-            if tile is None:
-                continue
-
-            color, kind = tile
-
-            if player == 0 and kind == "dark":
-                score += 3
-            elif player == 1 and kind == "light":
-                score += 3
-
-    return score
-
-
-# 1) si un coup est gagnant, on va le jouer +1000
-# 2) si un coup offre une victoire à l'adversaire, on ne va pas le jouer -500
-# 3) prioriser les positions centrales
-# 4) Garder beaucoup de mobilité (ne pas bloquer un pion)
-
 def evaluate(state):
     board = state["board"]
     current = state["current"]
     score = 0
 
+
     if victory_conditions(state):
         score += 100000
         return score
-    
+        
     #mobilité
     moves = legal_move(state)
     score += len(moves) * 10
-
 
     center_cols = {2, 3, 4, 5}
     for r in range(8):
@@ -161,18 +111,46 @@ def evaluate(state):
                 score += 3
             #avancement
             if kind == "dark":
-                progress = (7 - r)   # noir avance vers le haut
+                progress = (7 - r)
                 score += progress * 5
             else:
-                progress = r         # blanc avance vers le bas
+                progress = r
                 score += progress * 5
     return score
 
-def minimax(state, depth, alpha, beta, maximizing):
-    if victory_conditions(state):
-        return 10000 if maximizing else -10000
-    if depth == 0:
-       return evaluate(state)
+def make_move(state, move):
+    board = state["board"]
+    (r1, c1), (r2, c2) = move
+
+    old_color = state["color"]
+    old_current = state["current"]
+
+    piece = board[r1][c1][1]
+    captured = board[r2][c2][1]
+
+    board[r1][c1][1] = None
+    board[r2][c2][1] = piece
+
+    state["current"] = 1 - state["current"]
+    state["color"] = board[r2][c2][0]
+
+    return piece, captured, old_color, old_current
+
+def unmake_move(state, move, piece, captured, old_color, old_current):
+    board = state["board"]
+    (r1, c1), (r2, c2) = move
+
+    board[r1][c1][1] = piece
+    board[r2][c2][1] = captured
+
+    state["color"] = old_color
+    state["current"] = old_current
+
+def minimax(state, player, depth=3, alpha=float('-inf'), beta=float('inf')):
+
+    if victory_conditions(state) or depth == 0:
+        return evaluate(state), None
+    
 
 
 
