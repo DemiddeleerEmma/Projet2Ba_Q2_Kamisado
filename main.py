@@ -155,7 +155,7 @@ def evaluate(state):
 
     moves_current = len(legal_move(state))
 
-    moves_opponent = count_moves_fake(state, 1 - state["current"])
+    moves_opponent = count_moves(state, 1 - state["current"])
 
     score += (moves_current - moves_opponent) * 2
 
