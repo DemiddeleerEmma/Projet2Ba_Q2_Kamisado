@@ -19,8 +19,6 @@ def legal_move(state):
     forced_color = state["color"]
     legal_moves = []
 
-
-
     if forced_color is None:
         legal_moves.append([[7, 4], [4, 4]])        
 
@@ -84,39 +82,53 @@ def victory_conditions(state):
     return False
 
 
+def count_moves_fake(state, player):
+    fake_state = {
+        "board": state["board"],
+        "current": player,
+        "color": state["color"]
+    }
+    return len(legal_move(fake_state))
+
 def evaluate(state):
     board = state["board"]
-    current = state["current"]
-    score = 0
-
 
     if victory_conditions(state):
-        score += 100000
-        return score
-        
-    #mobilité
-    moves = legal_move(state)
-    score += len(moves) * 10
+        for c in range(8):
+            tile = board[0][c][1]
+            if tile is not None and tile[1] == "dark":
+                return 100000
+        return -100000
 
+    score = 0
     center_cols = {2, 3, 4, 5}
+
     for r in range(8):
         for c in range(8):
             tile = board[r][c][1]
             if tile is None:
                 continue
 
-            color, kind = tile
-            #centre
-            if c in center_cols:
-                score += 3
-            #avancement
+            _, kind = tile
+
             if kind == "dark":
-                progress = (7 - r)
-                score += progress * 5
+                score += (7 - r) * 5
+                if c in center_cols:
+                    score += 3
             else:
-                progress = r
-                score += progress * 5
+                score -= r * 5
+                if c in center_cols:
+                    score -= 3
+
+    moves_current = len(legal_move(state))
+
+    moves_opponent = count_moves_fake(state, 1 - state["current"])
+
+    score += (moves_current - moves_opponent) * 2
+
     return score
+
+
 
 def make_move(state, move):
     board = state["board"]
@@ -230,7 +242,7 @@ def start_serveur():
                     if not moves:
                         move = [[0, 0], [0, 0]]
                     else:
-                        move = random.choice(moves)
+                        _, move = negamax(state, depth=3)
 
                     res = {
                         "response": "move",
