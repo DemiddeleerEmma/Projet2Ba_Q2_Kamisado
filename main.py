@@ -136,22 +136,36 @@ def position_score(state):
 
 def evaluate(state):
     board = state["board"]
+    current = state["current"]
     score = 0
 
+    if victory_conditions(state):
+        score += 100000
+        return score
+    
+    #mobilité
+    moves = legal_move(state)
+    score += len(moves) * 10
+
+
+    center_cols = {2, 3, 4, 5}
     for r in range(8):
         for c in range(8):
             tile = board[r][c][1]
             if tile is None:
                 continue
-
             color, kind = tile
-
-            #avancement, gérer le gain selon si on veut un bot aggressif ou pas
-            if kind == "light":
-                score += r * 6
+            #centre
+            if c in center_cols:
+                score += 3
+            #avancement
+            if kind == "dark":
+                progress = (7 - r)   # noir avance vers le haut
+                score =+ progress * 5
             else:
-                score -= (7 - r) * 6
-
+                progress = r         # blanc avance vers le bas
+                score =+ progress * 5
+    return score
 
 
 ##===========Serveur TCP===========
