@@ -66,6 +66,8 @@ def legal_move(state):
 
 ##===========Stratégie===========
 
+
+
 def victory_conditions(state):
     board = state["board"]
 
@@ -81,14 +83,6 @@ def victory_conditions(state):
 
     return False
 
-
-def count_moves_fake(state, player):
-    fake_state = {
-        "board": state["board"],
-        "current": player,
-        "color": state["color"]
-    }
-    return len(legal_move(fake_state))
 
 def evaluate(state):
     board = state["board"]
@@ -128,6 +122,13 @@ def evaluate(state):
 
     return score
 
+def count_moves(state, player):
+    fake_state = {
+        "board": state["board"],
+        "current": player,
+        "color": state["color"]
+    }
+    return len(legal_move(fake_state))
 
 
 def make_move(state, move):
