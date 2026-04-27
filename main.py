@@ -146,10 +146,33 @@ def unmake_move(state, move, piece, captured, old_color, old_current):
     state["color"] = old_color
     state["current"] = old_current
 
-def minimax(state, player, depth=3, alpha=float('-inf'), beta=float('inf')):
+def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
 
-    if victory_conditions(state) or depth == 0:
+    if depth == 0 or victory_conditions(state):
         return evaluate(state), None
+
+    best_value = -float("inf")
+    best_move = None
+
+    for move in legal_move(state):
+
+        piece, captured, old_color, old_current = make_move(state, move)
+
+        value, _ = negamax(state, depth - 1, -beta, -alpha)
+        value = -value
+
+        unmake_move(state, move, piece, captured, old_color, old_current)
+
+        if value > best_value:
+            best_value = value
+            best_move = move
+
+        alpha = max(alpha, best_value)
+
+        if alpha >= beta:
+            break
+
+    return best_value, best_move
     
 
 
