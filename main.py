@@ -66,7 +66,46 @@ def legal_move(state):
 
 ##===========Stratégie===========
 
+##===========Make/unmake/Count_moves===========
 
+def count_moves(state, player):
+    fake_state = {
+        "board": state["board"],
+        "current": player,
+        "color": state["color"]
+    }
+    return len(legal_move(fake_state))
+
+
+def make_move(state, move):
+    board = state["board"]
+    (r1, c1), (r2, c2) = move
+
+    old_color = state["color"]
+    old_current = state["current"]
+
+    piece = board[r1][c1][1]
+    captured = board[r2][c2][1]
+
+    board[r1][c1][1] = None
+    board[r2][c2][1] = piece
+
+    state["current"] = 1 - state["current"]
+    state["color"] = board[r2][c2][0]
+
+    return piece, captured, old_color, old_current
+
+def unmake_move(state, move, piece, captured, old_color, old_current):
+    board = state["board"]
+    (r1, c1), (r2, c2) = move
+
+    board[r1][c1][1] = piece
+    board[r2][c2][1] = captured
+
+    state["color"] = old_color
+    state["current"] = old_current
+
+##===========Evaluate + Negamax===========
 
 def victory_conditions(state):
     board = state["board"]
@@ -122,42 +161,6 @@ def evaluate(state):
 
     return score
 
-def count_moves(state, player):
-    fake_state = {
-        "board": state["board"],
-        "current": player,
-        "color": state["color"]
-    }
-    return len(legal_move(fake_state))
-
-
-def make_move(state, move):
-    board = state["board"]
-    (r1, c1), (r2, c2) = move
-
-    old_color = state["color"]
-    old_current = state["current"]
-
-    piece = board[r1][c1][1]
-    captured = board[r2][c2][1]
-
-    board[r1][c1][1] = None
-    board[r2][c2][1] = piece
-
-    state["current"] = 1 - state["current"]
-    state["color"] = board[r2][c2][0]
-
-    return piece, captured, old_color, old_current
-
-def unmake_move(state, move, piece, captured, old_color, old_current):
-    board = state["board"]
-    (r1, c1), (r2, c2) = move
-
-    board[r1][c1][1] = piece
-    board[r2][c2][1] = captured
-
-    state["color"] = old_color
-    state["current"] = old_current
 
 def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
 
@@ -186,11 +189,38 @@ def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
             break
 
     return best_value, best_move
-    
+##===========Messages marrants===========
 
+messages = [
+    "Prépare-toi à perdre ! 😈",
+    "C’est déjà terminé, tu ne le sais juste pas encore.",
+    "Je prends juste le contrôle, rien de personnel.",
+    "Tu viens vraiment de jouer ça ?",
+    "Erreur de calcul détectée… chez toi.",
+    "Je vais accélérer la fin de cette partie ⚡",
 
+    "Tu ne t’y attendais pas, hein ?",
+    "Ce coup était déjà prévu depuis longtemps.",
+    "Je joue sur le plateau… et dans ta tête 😏",
+    "Réfléchis bien à ton prochain regret.",
+    "Tu hésites ? Mauvais signe.",
+    "Tout est sous contrôle… du mien.",
 
+    "Analyse terminée. Résultat: favorable pour moi.",
+    "Probabilité de victoire en hausse 📈",
+    "Aucune erreur détectée dans mon plan.",
+    "Optimisation en cours… et réussie.",
+    "Je ne ressens pas de stress. Toi si ?",
+    "Je calcule plus vite que ton intuition.",
 
+    "Coup de maître incoming ⚡ (ou pas)",
+    "J’espère que tu as bien réfléchi… moi oui.",
+    "Je joue et je juge en même temps 😎",
+    "Ce coup est sponsorisé par la logique.",
+    "Je ne fais jamais d’erreurs… enfin presque.",
+    "Bonne chance pour défendre ça 😄",
+    "Oops… trop tard pour réagir."
+]
 
 ##===========Serveur TCP===========
 def start_serveur():
@@ -245,12 +275,13 @@ def start_serveur():
                     else:
                         _, move = negamax(state, depth=3)
 
+                    message = random.choice(messages)
+
                     res = {
                         "response": "move",
-                        "move": move
+                        "move": move,
+                        "message": message
                     }
-
-                    print(move)
 
                     msg = json.dumps(res).encode()
                     client.sendall(struct.pack('I', len(msg)))
