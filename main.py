@@ -4,12 +4,44 @@ import sys
 import struct
 import json
 import random
-from copy import deepcopy
+import time as _time
 
 ##===========configuration===========
 PORT = 8888
 NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
+
+##===========Messages marrants===========
+
+messages = [
+    "Prépare-toi à perdre ! 😈",
+    "C’est déjà terminé, tu ne le sais juste pas encore.",
+    "Je prends juste le contrôle, rien de personnel.",
+    "Tu viens vraiment de jouer ça ?",
+    "Erreur de calcul détectée… chez toi.",
+    "Je vais accélérer la fin de cette partie ⚡",
+
+    "Tu ne t’y attendais pas, hein ?",
+    "Ce coup était déjà prévu depuis longtemps.",
+    "Je joue sur le plateau… et dans ta tête 😏",
+    "Réfléchis bien à ton prochain regret.",
+    "Tu hésites ? Mauvais signe.",
+    "Tout est sous contrôle… du mien.",
+
+    "Analyse terminée. Résultat: favorable pour moi.",
+    "Probabilité de victoire en hausse 📈",
+    "Optimisation en cours… et réussie.",
+    "Je ne ressens pas de stress. Toi si ?",
+    "Je calcule plus vite que ton intuition.",
+
+    "Coup de maître incoming ⚡ (ou pas)",
+    "J’espère que tu as bien réfléchi… moi oui.",
+    "Je joue et je juge en même temps 😎",
+    "Ce coup est sponsorisé par la logique.",
+    "Je ne fais jamais d’erreurs… enfin presque.",
+    "Bonne chance pour défendre ça 😄",
+    "Oops… trop tard pour réagir."
+]
 
 ##===========Générer tous les moves legaux===========
 
@@ -20,7 +52,7 @@ def legal_move(state):
     legal_moves = []
 
     if forced_color is None:
-        legal_moves.append([[7, 4], [4, 4]])        
+        legal_moves.append[[[7, 4], [4, 4]]]      
 
     else:
 
@@ -43,7 +75,8 @@ def legal_move(state):
                 else:
                     directions = [(-1,0),(-1,-1),(-1,1)]
                 
-
+                br, bc = r, c
+                piece_moves = []
 
                 for dr, dc in directions:
                     nr, nc = r + dr, c + dc
@@ -53,13 +86,15 @@ def legal_move(state):
                         if board[nr][nc][1] is not None:
                             break
 
-                        legal_moves.append([[r, c], [nr, nc]])
+                        piece_moves.append([[r, c], [nr, nc]])
 
                         nr += dr
                         nc += dc
-                
-                if legal_moves == []:
-                    legal_moves = ([[r, c], [r, c]])
+                if piece_moves:
+                    legal_moves.extend(piece_moves)
+
+                else:
+                    legal_moves.append([[r, c], [r, c]])
 
         
     return legal_moves
@@ -155,9 +190,8 @@ def evaluate(state):
 
     moves_current = len(legal_move(state))
 
-    moves_opponent = count_moves(state, 1 - state["current"])
 
-    score += (moves_current - moves_opponent) * 2
+    score += moves_current * 2
 
     return score
 
@@ -189,38 +223,7 @@ def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
             break
 
     return best_value, best_move
-##===========Messages marrants===========
 
-messages = [
-    "Prépare-toi à perdre ! 😈",
-    "C’est déjà terminé, tu ne le sais juste pas encore.",
-    "Je prends juste le contrôle, rien de personnel.",
-    "Tu viens vraiment de jouer ça ?",
-    "Erreur de calcul détectée… chez toi.",
-    "Je vais accélérer la fin de cette partie ⚡",
-
-    "Tu ne t’y attendais pas, hein ?",
-    "Ce coup était déjà prévu depuis longtemps.",
-    "Je joue sur le plateau… et dans ta tête 😏",
-    "Réfléchis bien à ton prochain regret.",
-    "Tu hésites ? Mauvais signe.",
-    "Tout est sous contrôle… du mien.",
-
-    "Analyse terminée. Résultat: favorable pour moi.",
-    "Probabilité de victoire en hausse 📈",
-    "Aucune erreur détectée dans mon plan.",
-    "Optimisation en cours… et réussie.",
-    "Je ne ressens pas de stress. Toi si ?",
-    "Je calcule plus vite que ton intuition.",
-
-    "Coup de maître incoming ⚡ (ou pas)",
-    "J’espère que tu as bien réfléchi… moi oui.",
-    "Je joue et je juge en même temps 😎",
-    "Ce coup est sponsorisé par la logique.",
-    "Je ne fais jamais d’erreurs… enfin presque.",
-    "Bonne chance pour défendre ça 😄",
-    "Oops… trop tard pour réagir."
-]
 
 ##===========Serveur TCP===========
 def start_serveur():
