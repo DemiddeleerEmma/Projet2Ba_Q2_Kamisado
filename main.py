@@ -157,36 +157,73 @@ def victory_conditions(state):
 
     return False
 
+##Bonus avancement
+Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
+Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
 
 def evaluate(state):
-    board = state["board"]
 
-    if victory_conditions(state):
-        for c in range(8):
-            tile = board[0][c][1]
-            if tile is not None and tile[1] == "dark":
-                return 100000
-        return -100000
+    board = state["board"]
+    current = state["current"]
+
+    for c in range(8):
+        tile = board[7][c][1]
+        if tile is not None and tile[1] == "light":
+            # light a atteint row 7 => light gagne => on est current=dark => on perd
+            return -100000 if current == 0 else 100000
+    for c in range(8):
+        tile = board[0][c][1]
+        if tile is not None and tile[1] == "dark":
+            return 100000 if current == 0 else -100000
 
     score = 0
-    center_cols = {2, 3, 4, 5}
 
     for r in range(8):
         for c in range(8):
-            tile = board[r][c][1]
+            cell = board[r][c]
+            tile = cell[1]
             if tile is None:
                 continue
 
             _, kind = tile
 
             if kind == "dark":
-                score += (7 - r) * 5
-                if c in center_cols:
-                    score += 3
+                base = Dark_bonus[r]
+                if 2 <= c <= 5:
+                    base += 4
+                score += base
             else:
-                score -= r * 5
-                if c in center_cols:
-                    score -= 3
+                base = Light_bonus[r]
+                if 2<= c <= 5:
+                    base += 4
+                score -= base
+    for r in range(8):
+        for c in range(8):
+            tile = board[r][c][1]
+            if tile is None:
+                continue
+            _, kind = tile
+            if kind == "light":
+                free = 0
+                for nr in range(r + 1, 8):
+                    if board[nr][c][1] is not None:
+                        break
+                    free += 1
+                score += (7 - free) * 2
+            else:
+                free = 0
+                for nr in range(r - 1, -1, -1):
+                    if board[nr][c][1] is not None:
+                        break
+                    free += 1
+                score -= (7 - free) * 2
+
+    return score if current == 0 else -score
+
+    
+                
+
+
 
     moves_current = len(legal_move(state))
 
