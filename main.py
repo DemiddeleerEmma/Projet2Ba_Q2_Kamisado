@@ -14,32 +14,32 @@ MATRICULES = ["24164","24374"]
 ##===========Messages marrants===========
 
 messages = [
-    "Prépare-toi à perdre ! 😈",
+    "Prépare-toi à perdre !",
     "C’est déjà terminé, tu ne le sais juste pas encore.",
     "Je prends juste le contrôle, rien de personnel.",
     "Tu viens vraiment de jouer ça ?",
     "Erreur de calcul détectée… chez toi.",
-    "Je vais accélérer la fin de cette partie ⚡",
+    "Je vais accélérer la fin de cette partie",
 
     "Tu ne t’y attendais pas, hein ?",
     "Ce coup était déjà prévu depuis longtemps.",
-    "Je joue sur le plateau… et dans ta tête 😏",
+    "Je joue sur le plateau… et dans ta tête",
     "Réfléchis bien à ton prochain regret.",
     "Tu hésites ? Mauvais signe.",
     "Tout est sous contrôle… du mien.",
 
     "Analyse terminée. Résultat: favorable pour moi.",
-    "Probabilité de victoire en hausse 📈",
+    "Probabilité de victoire en hausse",
     "Optimisation en cours… et réussie.",
     "Je ne ressens pas de stress. Toi si ?",
     "Je calcule plus vite que ton intuition.",
 
-    "Coup de maître incoming ⚡ (ou pas)",
+    "Coup de maître incoming (ou pas)",
     "J’espère que tu as bien réfléchi… moi oui.",
-    "Je joue et je juge en même temps 😎",
+    "Je joue et je juge en même temps ",
     "Ce coup est sponsorisé par la logique.",
     "Je ne fais jamais d’erreurs… enfin presque.",
-    "Bonne chance pour défendre ça 😄",
+    "Bonne chance pour défendre ça",
     "Oops… trop tard pour réagir."
 ]
 
