@@ -221,16 +221,6 @@ def evaluate(state):
     return score if current == 0 else -score
 
     
-                
-
-
-
-    moves_current = len(legal_move(state))
-
-
-    score += moves_current * 2
-
-    return score
 
 
 def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
