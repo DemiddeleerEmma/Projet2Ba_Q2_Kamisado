@@ -52,7 +52,7 @@ def legal_move(state):
     legal_moves = []
 
     if forced_color is None:
-        legal_moves.append[[[7, 4], [4, 4]]]      
+        legal_moves.append([[7, 4], [4, 4]])     
 
     else:
 
