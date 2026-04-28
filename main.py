@@ -220,7 +220,16 @@ def evaluate(state):
 
     return score if current == 0 else -score
 
-    
+def move_score_for_ordering(move, board, kind):
+    (r1, c1), (r2, c2) = move
+    score = 0
+    if kind == "dark":
+        score += (r1 - r2) * 10   
+    else:
+        score += (r2 - r1) * 10   
+    if 2 <= c2 <= 5:
+        score += 3
+    return score
 
 
 def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
