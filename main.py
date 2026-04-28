@@ -231,14 +231,23 @@ def move_score_for_ordering(move, board, kind):
         score += 3
     return score
 
+_deadline = None
+
+class _TimeoutException(Exception):
+    pass
+
 
 def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
+    global _deadline
 
+    if _deadline is not None and _time.time() > _deadline:
+        raise _TimeoutException()
+    
     if depth == 0 or victory_conditions(state):
         return evaluate(state), None
 
     best_value = -float("inf")
-    best_move = 
+    best_move = None
     
     moves = legal_move(state)
 
@@ -264,6 +273,25 @@ def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
         if alpha >= beta:
             break
 
+    return best_value, best_move
+
+def negamax_timeout(state, max_depth=7, time_limit=2.8):
+    global _deadline
+    _deadline = _time.time() + time_limit
+
+    best_move = None
+    best_value = -float("inf")
+
+    for depth in range(1, max_depth + 1):
+        try:
+            value, move = negamax(state,depth)
+            if move is not None:
+                best_move = move
+                best_value = value
+        except _TimeoutException:
+            break
+    
+    _deadline = None
     return best_value, best_move
 
 
@@ -313,14 +341,28 @@ def start_serveur():
                     print("demande de jeu")
 
                     state = req["state"]
+
+##
+                    board = state["board"]
+                    for r in range(8):
+                        for c in range(8):
+                            cell = board[r][c]
+                            if not isinstance(cell, list):
+                                board[r][c] = list(cell)
+                            piece = board[r][c][1]
+                            if piece is not None and not isinstance(piece, list):
+                                board[r][c][1] = list(piece)
+##
                     moves = legal_move(state)
 
                     if not moves:
                         move = [[0, 0], [0, 0]]
                     else:
-                        _, move = negamax(state, depth=3)
+                        _, move = negamax_timeout(state, max_depth=5, time_limit=2.5)
 
                     message = random.choice(messages)
+
+                    print(move)
 
                     res = {
                         "response": "move",
@@ -345,7 +387,6 @@ def start_serveur():
         
         while True:
             client, adresse = s.accept()
-            #threading.Thread(target=handle_client, args=(client, adresse), daemon=True).start()
             handle_client(client, adresse)
 
     threading.Thread(target=loop, daemon=True).start()
