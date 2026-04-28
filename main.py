@@ -238,9 +238,15 @@ def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
         return evaluate(state), None
 
     best_value = -float("inf")
-    best_move = None
+    best_move = 
+    
+    moves = legal_move(state)
 
-    for move in legal_move(state):
+    board = state["board"]
+    current_kind = "light" if state["current"] == 1 else "dark"
+    moves.sort(key=lambda m: move_score_for_ordering(m, board, current_kind), reverse=True)
+
+    for move in moves:
 
         piece, captured, old_color, old_current = make_move(state, move)
 
