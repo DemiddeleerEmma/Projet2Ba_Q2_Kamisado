@@ -194,12 +194,7 @@ def evaluate(state):
                 if 2<= c <= 5:
                     base += 4
                 score -= base
-    for r in range(8):
-        for c in range(8):
-            tile = board[r][c][1]
-            if tile is None:
-                continue
-            _, kind = tile
+                
             if kind == "light":
                 free = 0
                 for nr in range(r + 1, 8):
