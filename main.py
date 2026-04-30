@@ -152,8 +152,6 @@ def victory_conditions(state):
     return False
 
 ##Bonus avancement
-Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
-Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
 
 
 
@@ -185,30 +183,34 @@ def evaluate(state):
             _, kind = tile
 
             if kind == "dark":
+
+                Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
                 base = Dark_bonus[r]
                 if 2 <= c <= 5:
                     base += 4
                 score += base
-            else:
-                base = Light_bonus[r]
-                if 2<= c <= 5:
-                    base += 4
-                score -= base
-                
-            if kind == "light":
-                free = 0
-                for nr in range(r + 1, 8):
-                    if board[nr][c][1] is not None:
-                        break
-                    free += 1
-                score += (7 - free) * 2
-            else:
+
                 free = 0
                 for nr in range(r - 1, -1, -1):
                     if board[nr][c][1] is not None:
                         break
                     free += 1
                 score -= (7 - free) * 2
+
+            else:
+
+                Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
+                base = Light_bonus[r]
+                if 2<= c <= 5:
+                    base += 4
+                score -= base
+
+                free = 0               
+                for nr in range(r + 1, 8):
+                    if board[nr][c][1] is not None:
+                        break
+                    free += 1
+                score += (7 - free) * 2
 
     return score if current == 0 else -score
 
@@ -285,7 +287,6 @@ def negamax_timeout(state, max_depth=9, time_limit=2.8):
     
     _deadline = None
     return best_value, best_move
-
 
 ##===========Serveur TCP===========
 def start_serveur():
@@ -418,8 +419,6 @@ def main():
 
     host = sys.argv[1]
     port = int(sys.argv[2])
-    
-
 
     start_serveur() 
     register(host, port)
