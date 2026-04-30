@@ -15,13 +15,13 @@ MATRICULES = ["24164","24374"]
 
 messages = [
     "Prépare-toi à perdre !",
-    "C’est déjà terminé, tu ne le sais juste pas encore.",
+    "C est déjà terminé, tu ne le sais juste pas encore.",
     "Je prends juste le contrôle, rien de personnel.",
     "Tu viens vraiment de jouer ça ?",
     "Erreur de calcul détectée… chez toi.",
     "Je vais accélérer la fin de cette partie",
 
-    "Tu ne t’y attendais pas, hein ?",
+    "Tu ne t y attendais pas, hein ?",
     "Ce coup était déjà prévu depuis longtemps.",
     "Je joue sur le plateau… et dans ta tête",
     "Réfléchis bien à ton prochain regret.",
@@ -35,10 +35,10 @@ messages = [
     "Je calcule plus vite que ton intuition.",
 
     "Coup de maître incoming (ou pas)",
-    "J’espère que tu as bien réfléchi… moi oui.",
+    "J espère que tu as bien réfléchi… moi oui.",
     "Je joue et je juge en même temps ",
     "Ce coup est sponsorisé par la logique.",
-    "Je ne fais jamais d’erreurs… enfin presque.",
+    "Je ne fais jamais d erreurs… enfin presque.",
     "Bonne chance pour défendre ça",
     "Oops… trop tard pour réagir."
 ]
@@ -51,50 +51,44 @@ def legal_move(state):
     forced_color = state["color"]
     legal_moves = []
 
-    if forced_color is None:
-        legal_moves.append([[7, 4], [4, 4]])     
+    for r in range(8):
+        for c in range(8):
+            tile = board[r][c][1]
+            if tile is None:
+                continue
 
-    else:
+            color, kind = tile
 
-        for r in range(8):
-            for c in range(8):
-                tile = board[r][c][1]
-                if tile is None:
-                    continue
+            if kind != ["dark","light"][current]:
+                continue
 
-                color, kind = tile
+            if forced_color is not None and color != forced_color:
+                continue
 
-                if kind != ["dark","light"][current]:
-                    continue
-
-                if forced_color is not None and color != forced_color:
-                    continue
-
-                if kind == "light":
-                    directions = [(1,0),(1,1),(1,-1)]
-                else:
-                    directions = [(-1,0),(-1,-1),(-1,1)]
+            if kind == "light":
+                directions = [(1,0),(1,1),(1,-1)]
+            else:
+                directions = [(-1,0),(-1,-1),(-1,1)]
                 
-                br, bc = r, c
-                piece_moves = []
+            piece_moves = []
 
-                for dr, dc in directions:
-                    nr, nc = r + dr, c + dc
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
 
-                    while 0 <= nr < 8 and 0 <= nc < 8:
+                while 0 <= nr < 8 and 0 <= nc < 8:
 
-                        if board[nr][nc][1] is not None:
-                            break
+                    if board[nr][nc][1] is not None:
+                        break
 
-                        piece_moves.append([[r, c], [nr, nc]])
+                    piece_moves.append([[r, c], [nr, nc]])
 
-                        nr += dr
-                        nc += dc
-                if piece_moves:
-                    legal_moves.extend(piece_moves)
+                    nr += dr
+                    nc += dc
+            if piece_moves:
+                legal_moves.extend(piece_moves)
 
-                else:
-                    legal_moves.append([[r, c], [r, c]])
+            else:
+                legal_moves.append([[r, c], [r, c]])
 
         
     return legal_moves
@@ -161,6 +155,9 @@ def victory_conditions(state):
 Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
 Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
 
+
+
+###A améliorer, les trois boucles for prennent du temps pour rien
 def evaluate(state):
 
     board = state["board"]
@@ -275,7 +272,7 @@ def negamax(state, depth, alpha=float('-inf'), beta=float('inf')):
 
     return best_value, best_move
 
-def negamax_timeout(state, max_depth=7, time_limit=2.8):
+def negamax_timeout(state, max_depth=9, time_limit=2.8):
     global _deadline
     _deadline = _time.time() + time_limit
 
@@ -358,7 +355,7 @@ def start_serveur():
                     if not moves:
                         move = [[0, 0], [0, 0]]
                     else:
-                        _, move = negamax_timeout(state, max_depth=5, time_limit=2.5)
+                        _, move = negamax_timeout(state, max_depth= 9, time_limit=2.8)
 
                     message = random.choice(messages)
 
