@@ -151,11 +151,6 @@ def victory_conditions(state):
 
     return False
 
-##Bonus avancement
-
-
-
-###A améliorer, les trois boucles for prennent du temps pour rien
 def evaluate(state):
 
     board = state["board"]
@@ -164,8 +159,8 @@ def evaluate(state):
     for c in range(8):
         tile = board[7][c][1]
         if tile is not None and tile[1] == "light":
-            # light a atteint row 7 => light gagne => on est current=dark => on perd
             return -100000 if current == 0 else 100000
+        
     for c in range(8):
         tile = board[0][c][1]
         if tile is not None and tile[1] == "dark":
@@ -188,14 +183,13 @@ def evaluate(state):
                 base = Dark_bonus[r]
                 if 2 <= c <= 5:
                     base += 4
-                score += base
 
                 free = 0
                 for nr in range(r - 1, -1, -1):
                     if board[nr][c][1] is not None:
                         break
                     free += 1
-                score -= (7 - free) * 2
+                score += base + free * 2
 
             else:
 
@@ -203,14 +197,17 @@ def evaluate(state):
                 base = Light_bonus[r]
                 if 2<= c <= 5:
                     base += 4
-                score -= base
 
                 free = 0               
                 for nr in range(r + 1, 8):
                     if board[nr][c][1] is not None:
                         break
                     free += 1
-                score += (7 - free) * 2
+                score -= base + free * 2
+
+    dark_moves  = count_moves(state, 0)
+    light_moves = count_moves(state, 1)
+    score += (dark_moves - light_moves) * 2
 
     return score if current == 0 else -score
 
@@ -282,8 +279,11 @@ def negamax_timeout(state, max_depth=9, time_limit=2.8):
             if move is not None:
                 best_move = move
                 best_value = value
+                print(f"  depth={depth} score={value} move={move}")
+
         except _TimeoutException:
-            break
+                print(f"  Timeout à depth={depth}")
+                break
     
     _deadline = None
     return best_value, best_move
