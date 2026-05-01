@@ -11,6 +11,12 @@ PORT = 8888
 NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
 
+##===========Variables===========
+
+Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
+Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
+
+
 ##===========Messages marrants===========
 
 messages = [
@@ -50,6 +56,7 @@ def legal_move(state):
     current = state["current"]
     forced_color = state["color"]
     legal_moves = []
+
 
     for r in range(8):
         for c in range(8):
@@ -95,16 +102,7 @@ def legal_move(state):
 
 ##===========Stratégie===========
 
-##===========Make/unmake/Count_moves===========
-
-def count_moves(state, player):
-    fake_state = {
-        "board": state["board"],
-        "current": player,
-        "color": state["color"]
-    }
-    return len(legal_move(fake_state))
-
+##===========Make/unmake_moves===========
 
 def make_move(state, move):
     board = state["board"]
@@ -179,10 +177,9 @@ def evaluate(state):
 
             if kind == "dark":
 
-                Dark_bonus = [80, 50, 30, 18, 10, 5, 2, 0]
                 base = Dark_bonus[r]
                 if 2 <= c <= 5:
-                    base += 4
+                    base += 15
 
                 free = 0
                 for nr in range(r - 1, -1, -1):
@@ -193,10 +190,9 @@ def evaluate(state):
 
             else:
 
-                Light_bonus = [0, 2, 5, 10, 18, 30, 50, 80]
                 base = Light_bonus[r]
                 if 2<= c <= 5:
-                    base += 4
+                    base += 15
 
                 free = 0               
                 for nr in range(r + 1, 8):
@@ -205,8 +201,9 @@ def evaluate(state):
                     free += 1
                 score -= base + free * 2
 
-    dark_moves  = count_moves(state, 0)
-    light_moves = count_moves(state, 1)
+    dark_moves  = len(legal_move({**state, "current": 0}))
+    light_moves = len(legal_move({**state, "current": 1}))
+
     score += (dark_moves - light_moves) * 2
 
     return score if current == 0 else -score
@@ -334,24 +331,12 @@ def start_serveur():
                     print("demande de jeu")
 
                     state = req["state"]
-
-##
-                    board = state["board"]
-                    for r in range(8):
-                        for c in range(8):
-                            cell = board[r][c]
-                            if not isinstance(cell, list):
-                                board[r][c] = list(cell)
-                            piece = board[r][c][1]
-                            if piece is not None and not isinstance(piece, list):
-                                board[r][c][1] = list(piece)
-##
                     moves = legal_move(state)
 
                     if not moves:
                         move = [[0, 0], [0, 0]]
                     else:
-                        _, move = negamax_timeout(state, max_depth= 9, time_limit=2.8)
+                        _, move = negamax_timeout(state, 25 , 2.9 )
 
                     message = random.choice(messages)
 
