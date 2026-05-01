@@ -57,7 +57,6 @@ def legal_move(state):
     forced_color = state["color"]
     legal_moves = []
 
-
     for r in range(8):
         for c in range(8):
             tile = board[r][c][1]
@@ -96,12 +95,10 @@ def legal_move(state):
 
             else:
                 legal_moves.append([[r, c], [r, c]])
-
         
     return legal_moves
 
-##===========Stratégie===========
-
+##======================Stratégie======================
 ##===========Make/unmake_moves===========
 
 def make_move(state, move):
@@ -129,8 +126,8 @@ def unmake_move(state, move, piece, captured, old_color, old_current):
     board[r1][c1][1] = piece
     board[r2][c2][1] = captured
 
-    state["color"] = old_color
     state["current"] = old_current
+    state["color"] = old_color
 
 ##===========Evaluate + Negamax===========
 
