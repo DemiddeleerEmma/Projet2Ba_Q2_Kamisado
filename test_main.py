@@ -1,4 +1,5 @@
 import pytest
+import time
 from stratégie import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax, negamax_timeout, move_score_for_ordering
 
 
@@ -352,39 +353,6 @@ class Test_evaluate:
         state["board"][4][4][1] = ("red", "dark")
         assert isinstance(evaluate(state), int)
 
-class Test_negamax:
-
-    BOARD = [
-        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
-        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
-        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
-        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
-        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
-        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
-        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
-        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
-    ]
-
-    def make_empty_state(self, current=0, forced_color=None):
-        return {
-            "board": [[[color, None] for color in row] for row in self.BOARD],
-            "current": current,
-            "color": forced_color
-        }
-
-    def test_depth_0(self):
-        state = self.make_empty_state(0)
-        state["board"][4][4][1] = ("red", "dark")
-        _, move = negamax(state, depth=0)
-        assert move is None
-
-    def test_victory_stop_search(self):
-        state = self.make_empty_state(current=0)
-        state["board"][0][3][1] = ("red", "dark")
-        score, move = negamax(state, depth=3)
-        assert score == 100000
-        assert move is None
-
 class Test_move_score_for_ordering:
     
     BOARD = [
@@ -427,3 +395,74 @@ class Test_move_score_for_ordering:
         score_centre = move_score_for_ordering([[4, 4], [3, 3]], state, "dark")
         score_side   = move_score_for_ordering([[4, 4], [3, 0]], state, "dark")
         assert score_centre > score_side
+
+class Test_negamax:
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+
+    def test_depth_0(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        _, move = negamax(state, depth=0)
+        assert move is None
+
+    def test_victory_stop_search(self):
+        state = self.make_empty_state(current=0)
+        state["board"][0][3][1] = ("red", "dark")
+        score, move = negamax(state, depth=3)
+        assert score == 100000
+        assert move is None
+
+class Test_negamax_timeout:
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+    
+    def test_return_legal_moves(self):
+
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        moves_legaux = legal_move(state)
+        _, move = negamax_timeout(state, 3, 1.0)
+        assert move in moves_legaux
+
+    def test_time_timeout(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        state["board"][3][3][1] = ("blue", "light")
+        limit = 0.5
+        start = time.time()
+        negamax_timeout(state, 25, limit)
+        assert time.time() - start < limit + 0.5
+
