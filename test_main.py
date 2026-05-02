@@ -327,3 +327,10 @@ class Test_negamax:
         state["board"][4][4][1] = ("red", "dark")
         _, move = negamax(state, depth=0)
         assert move is None
+
+    def test_victory_stop_search(self):
+        state = self.make_empty_state(current=0)
+        state["board"][0][3][1] = ("red", "dark")
+        score, move = negamax(state, depth=3)
+        assert score == 100000
+        assert move is None
