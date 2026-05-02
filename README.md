@@ -14,6 +14,11 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 ## Arborescence du dépôt
 ```
 .
+├── requirements.txt
+├── .gitignore
+├── serveur.py
+├── stratégie.py
+├── test_stratégie
 ├── main.py              # Fichier principal : IA + serveur TCP
 └── README.md            # Documentation du projet
 ```
