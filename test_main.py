@@ -64,3 +64,10 @@ class Test_legal_move:
         assert [[5, 3], [4, 3]] in moves
         assert [[5, 3], [3, 3]] not in moves
         assert [[5, 3], [2, 3]] not in moves
+
+    def test_stay_in_board(self):
+        state = self.make_empty_state(current=0)
+        state["board"][1][0][1] = ("red", "dark") 
+        moves = legal_move(state)
+        assert [[1, 0], [0, 0]] in moves
+        assert [[1, 0], [0, -1]] not in moves
