@@ -30,4 +30,5 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 
 ## Auteurs
 **Noms:** Demiddeleer Emma; Gailly Aurélie
+
 **Matricules:** 24374 et 24164
