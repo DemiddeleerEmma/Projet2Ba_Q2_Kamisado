@@ -35,3 +35,20 @@ def test_is_legal_move_not_empty():
     state = initial_state()
     moves = legal_move(state)
     assert len(moves) > 0
+
+def test_make_move():
+    state = initial_state()
+    move = [[6,3], [5,3]]
+    make_move(state, move)
+    assert state["board"][6][3][1] is None
+    assert state["board"][5][3][1] is not None
+
+def test_unmake_move():
+    state = initial_state()
+    original = deepcopy(state)
+    move = [[6,3], [5,3]]
+    piece, captured, old_color, old_current = make_move(state, move)
+    unmake_move(state, move, piece, captured, old_color, old_current)
+    assert state == original
+
+
