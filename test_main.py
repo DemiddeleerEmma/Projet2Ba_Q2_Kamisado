@@ -1,5 +1,6 @@
 import pytest
-from stratégie import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax
+from stratégie import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax, negamax_timeout, move_score_for_ordering
+
 
 class Test_legal_move:
 
@@ -383,3 +384,46 @@ class Test_negamax:
         score, move = negamax(state, depth=3)
         assert score == 100000
         assert move is None
+
+class Test_move_score_for_ordering:
+    
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+
+    def test_dark_advance_score(self):
+
+        state = self.make_empty_state(current=0)
+        state["board"][3][3][1] = ("red", "dark")       
+        move = [[4, 4], [2, 4]]
+        score = move_score_for_ordering(move, state, "dark") 
+        assert score > 0
+
+    def test_light_advance_score(self):
+
+        state = self.make_empty_state(current=0)
+        state["board"][3][3][1] = ("red", "light")       
+        move = [[2, 4], [4, 4]]
+        score = move_score_for_ordering(move, state, "dark") 
+        assert score < 0
+
+    def test_colonne_centrale_bonus(self):
+        state = self.make_empty_state(current=0)
+        state["board"][3][3][1] = ("red", "dark")    
+        score_centre = move_score_for_ordering([[4, 4], [3, 3]], state, "dark")
+        score_side   = move_score_for_ordering([[4, 4], [3, 0]], state, "dark")
+        assert score_centre > score_side
