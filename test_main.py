@@ -1,7 +1,6 @@
 import pytest
 from main import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax
 
-
 class Test_legal_move:
 
     BOARD = [
@@ -132,3 +131,107 @@ class Test_make_move:
         destination_tile_color = state["board"][2][4][0]
         make_move(state, [[4, 4], [2, 4]])
         assert state["color"] == destination_tile_color
+
+#class Test_unmake_move:
+    
+class Test_victory_conditions:
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+
+    def test_no_tile_no_win(self):
+        state = self.make_empty_state()
+        state["board"][4][4][1] = ("red", "dark")
+        state["board"][3][3][1] = ("blue", "light")
+        assert victory_conditions(state) is False
+
+    def test_light_win(self):
+        for col in range(8):
+            state = self.make_empty_state()
+            state["board"][7][col][1] = ("red", "light")
+            assert victory_conditions(state) is True
+ 
+    def test_dark_win(self):
+        for col in range(8):
+            state = self.make_empty_state()
+            state["board"][0][col][1] = ("red", "dark")
+            assert victory_conditions(state) is True
+
+    def test_dark_no_win(self):
+        for col in range(8):
+            state = self.make_empty_state()
+            state["board"][7][col][1] = ("red", "dark")
+            assert victory_conditions(state) is False
+
+ 
+    def test_light_no_win(self):
+        for col in range(8):
+            state = self.make_empty_state()
+            state["board"][0][col][1] = ("yellow", "light")
+            assert victory_conditions(state) is False
+ 
+    def test_victory_make_move(self):
+        state = self.make_empty_state(0)
+        state["board"][1][3][1] = ("red", "dark")
+        make_move(state, [[1, 3], [0, 3]])
+        assert victory_conditions(state) is True
+
+class Test_evaluate:
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+    #=================VICTOIRE=================#
+
+    def test_light_row_7_light(self):
+        state = self.make_empty_state(current=1)
+        state["board"][7][3][1] = ("red", "light")
+        score = evaluate(state)
+        assert score == 100000
+ 
+    def test_light_row_7_dark(self):
+        state = self.make_empty_state(current=0)
+        state["board"][7][3][1] = ("red", "light")
+        score = evaluate(state)
+        assert score == -100000
+
+    def test_dark_row_0_dark(self):
+        state = self.make_empty_state(current=0)
+        state["board"][0][3][1] = ("red", "dark")
+        score = evaluate(state)
+        assert score == 100000
+ 
+    def test_dark_row_0_light(self):
+        state = self.make_empty_state(current=1)
+        state["board"][0][3][1] = ("red", "dark")
+        score = evaluate(state)
+        assert score == -100000
