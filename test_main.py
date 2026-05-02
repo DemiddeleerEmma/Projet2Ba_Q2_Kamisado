@@ -45,3 +45,14 @@ class Test_legal_move:
         assert [[4, 4], [7, 4]] in moves
         assert [[4, 4], [5, 5]] in moves
         assert [[4, 4], [5, 3]] in moves
+
+    def test_piece_bloquee(self):
+        state = self.make_empty_state(current=0)
+        state["board"][3][3][1] = ("red", "dark")
+        state["board"][2][2][1] = ("red", "light")
+        state["board"][2][3][1] = ("blue", "light")
+        state["board"][2][4][1] = ("purple", "light")
+        
+        moves = legal_move(state)
+
+        assert [[3, 3], [3, 3]] in moves
