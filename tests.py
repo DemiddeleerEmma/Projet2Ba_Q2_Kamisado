@@ -10,16 +10,28 @@ def empty_board():
     return board
 
 @pytest.fixture
-def initial_state(empty_board):
-    state = {
-        "board": deepcopy(empty_board),
-        "current": 0,        
+def initial_state():
+    board = empty_board()
+    board[6][3][1] = ("red", "dark")
+    board[1][4][1] = ("blue", "light")
+    return {
+        "board": board,
+        "current": 0,
         "color": None
     }
-    return state
+
 ##===========Tests unitaires===========
 
-def test_is_legal_move_empty(initial_state):
-    moves = legal_move(initial_state)
+def test_is_legal_move_empty():
+    state = {
+        "board": empty_board(),
+        "current": 0,
+        "color": None
+    }
+    moves = legal_move(state)
     assert moves == []
-    
+
+def test_is_legal_move_not_empty():
+    state = initial_state()
+    moves = legal_move(state)
+    assert len(moves) > 0
