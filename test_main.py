@@ -235,3 +235,18 @@ class Test_evaluate:
         state["board"][0][3][1] = ("red", "dark")
         score = evaluate(state)
         assert score == -100000
+    
+        #=================Mobility=================#
+    def test_score_mobility(self):
+        state_free = self.make_empty_state(current=0)
+        state_free["board"][4][4][1] = ("red", "dark")
+ 
+        state_blocked = self.make_empty_state(current=0)
+        state_blocked["board"][4][4][1] = ("red", "dark")
+        state_blocked["board"][3][4][1] = ("blue", "light")
+        state_blocked["board"][3][3][1] = ("pink", "light")
+        state_blocked["board"][3][5][1] = ("green", "light")
+ 
+        assert evaluate(state_free) > evaluate(state_blocked)
+
+
