@@ -1,5 +1,5 @@
 import pytest
-from main import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax
+from stratégie import legal_move, make_move, unmake_move, evaluate, victory_conditions, negamax
 
 class Test_legal_move:
 
@@ -132,7 +132,56 @@ class Test_make_move:
         make_move(state, [[4, 4], [2, 4]])
         assert state["color"] == destination_tile_color
 
-#class Test_unmake_move:
+class Test_unmake_move:
+        
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+    
+    def test_tile_come_back(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        piece, captured, old_color, old_current = make_move(state, [[4, 4], [2, 4]])
+        unmake_move(state, [[4, 4], [2, 4]], piece, captured, old_color, old_current)
+        assert state["board"][4][4][1] == ("red", "dark")
+
+    def test_destination_none(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        piece, captured, old_color, old_current = make_move(state, [[4, 4], [2, 4]])
+        unmake_move(state, [[4, 4], [2, 4]], piece, captured, old_color, old_current)
+        assert state["board"][2][4][1] is None
+
+    def test_current(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        piece, captured, old_color, old_current = make_move(state, [[4, 4], [2, 4]])
+        unmake_move(state, [[4, 4], [2, 4]], piece, captured, old_color, old_current)
+        assert state["current"] == 0
+
+    def test_color_(self):
+        state = self.make_empty_state(current=0, forced_color="pink")
+        state["board"][4][4][1] = ("red", "dark")
+        piece, captured, old_color, old_current = make_move(state, [[4, 4], [2, 4]])
+        unmake_move(state, [[4, 4], [2, 4]], piece, captured, old_color, old_current)
+        assert state["color"] == "pink"
+
+
     
 class Test_victory_conditions:
 
