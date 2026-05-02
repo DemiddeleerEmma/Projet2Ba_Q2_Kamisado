@@ -261,7 +261,7 @@ class Test_evaluate:
         score1 = evaluate(state1)
         assert score0 == -score1
 
-        #=================Position_bonus=================#
+    #=================Position_bonus=================#
     def test_dark_advanced(self):
         state1 = self.make_empty_state(0)
         state1["board"][1][4][1] = ("red", "dark")
@@ -296,3 +296,34 @@ class Test_evaluate:
  
         assert evaluate(state_centre) > evaluate(state_bord)
 
+    #=================General consistency=================#
+    def test_score_integer(self):
+        state = self.make_empty_state(current=0)
+        state["board"][4][4][1] = ("red", "dark")
+        assert isinstance(evaluate(state), int)
+
+class Test_negamax:
+
+    BOARD = [
+        ["orange", "blue", "purple", "pink", "yellow", "red", "green", "brown"],
+        ["red", "orange", "pink", "green", "blue", "yellow", "brown", "purple"],
+        ["green", "pink", "orange", "red", "purple", "brown", "yellow", "blue"],
+        ["pink", "purple", "blue", "orange", "brown", "green", "red", "yellow"],
+        ["yellow", "red", "green", "brown", "orange", "blue", "purple", "pink"],
+        ["blue", "yellow", "brown", "purple", "red", "orange", "pink", "green"],
+        ["purple", "brown", "yellow", "blue", "green", "pink", "orange", "red"],
+        ["brown", "green", "red", "yellow", "pink", "purple", "blue", "orange"],
+    ]
+
+    def make_empty_state(self, current=0, forced_color=None):
+        return {
+            "board": [[[color, None] for color in row] for row in self.BOARD],
+            "current": current,
+            "color": forced_color
+        }
+
+    def test_depth_0(self):
+        state = self.make_empty_state(0)
+        state["board"][4][4][1] = ("red", "dark")
+        _, move = negamax(state, depth=0)
+        assert move is None
