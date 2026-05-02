@@ -54,5 +54,13 @@ class Test_legal_move:
         state["board"][2][4][1] = ("purple", "light")
         
         moves = legal_move(state)
-
         assert [[3, 3], [3, 3]] in moves
+
+    def test_obstacle_cut(self):
+        state = self.make_empty_state(current=0)
+        state["board"][5][3][1] = ("red", "dark")
+        state["board"][3][3][1] = ("blue", "light")
+        moves = legal_move(state)
+        assert [[5, 3], [4, 3]] in moves
+        assert [[5, 3], [3, 3]] not in moves
+        assert [[5, 3], [2, 3]] not in moves
