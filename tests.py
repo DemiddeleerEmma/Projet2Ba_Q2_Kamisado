@@ -51,4 +51,41 @@ def test_unmake_move():
     unmake_move(state, move, piece, captured, old_color, old_current)
     assert state == original
 
+def test_victory_conditions_dark():
+    board = empty_board()
+    board[0][0][1] = ("red", "dark")
+    state = {
+        "board": board,
+        "current": 0,
+        "color": None
+    }
+    assert victory_conditions(state)
+
+def test_victory_conditions_light():
+    board = empty_board
+    board[7][0][1] = ("blue", "light")
+    state = {
+        "board": board,
+        "current": 0,
+        "color": None
+    }
+    assert victory_conditions(state)
+
+def test_no_victory_conditions():
+    assert not victory_conditions(initial_state())
+
+def test_evaluate_return():
+    score = evaluate(initial_state())
+    assert isinstance(score, int)
+
+def test_evaluate_win_score():
+    board = empty_board()
+    board[0][0][1] = ("red", "dark")
+    state = {
+        "board": board,
+        "current": 0,
+        "color": None
+    }
+    score = evaluate(state)
+    assert abs(score) >= 100000
 
