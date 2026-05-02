@@ -7,7 +7,7 @@ import random
 from stratégie import legal_move, negamax_timeout, messages
 
 ##===========Serveur TCP===========
-def start_serveur():
+def start_serveur(port):
     def handle_client(client, adresse):
 
         print("Connexion reçue")
@@ -81,7 +81,7 @@ def start_serveur():
     def loop():
         s = socket.socket()
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(("0.0.0.0", PORT))
+        s.bind(("0.0.0.0", port))
         s.listen()
         
         while True:
