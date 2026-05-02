@@ -71,3 +71,21 @@ class Test_legal_move:
         moves = legal_move(state)
         assert [[1, 0], [0, 0]] in moves
         assert [[1, 0], [0, -1]] not in moves
+
+    def test_forced_color(self):
+        state = self.make_empty_state(current=0, forced_color="red")
+        state["board"][3][3][1] = ("red", "dark") 
+        state["board"][5][5][1] = ("blue", "dark")
+        moves = legal_move(state)
+        sources = [mov[0] for mov in moves]
+        assert [3, 3] in sources
+        assert [5, 5] not in sources
+
+    def test_opponent_ignored(self):
+        state = self.make_empty_state(current=0)
+        state["board"][3][3][1] = ("red", "dark") 
+        state["board"][5][5][1] = ("blue", "light")
+        moves = legal_move(state)
+        sources = [mov[0] for mov in moves]
+        assert [3, 3] in sources
+        assert [5, 5] not in sources
