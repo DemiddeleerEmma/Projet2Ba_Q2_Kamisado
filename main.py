@@ -1,99 +1,16 @@
 import socket
-import threading
-import sys
 import struct
 import json
-import random
-import time as _time
+import sys
+import time
+
+from serveur import start_serveur
 
 ##===========configuration===========
 PORT = 8888
 NAME = "Les Infernales"
 MATRICULES = ["24164","24374"]
 
-##===========Serveur TCP===========
-def start_serveur():
-    def handle_client(client, adresse):
-
-        print("Connexion reçue")
-
-        with client:
-            def recv_exact(client, n):
-                data = b""
-                while len(data) < n:
-                    packet = client.recv(n - len(data))
-                    if not packet:
-                        return None
-                    data += packet
-                return data
-
-            raw_length = recv_exact(client, 4)
-            if raw_length is None:
-                return
-
-            length = struct.unpack('I', raw_length)[0]
-
-            data = recv_exact(client, length)
-            if data is None:
-                return
-
-            data = data.decode().strip()
-            req = json.loads(data)
-
-            if req["request"] == "ping":
-                try:
-                    res = {"response": "pong"}
-                    msg = json.dumps(res).encode()
-                    client.sendall(struct.pack('I', len(msg)))
-                    client.sendall(msg)
-                    print("pong envoyé")
-                except Exception as e:
-                    print("Connexion fermée après ping:", e)
-                    return
-
-
-            elif req["request"] == "play":
-                try:
-                    print("demande de jeu")
-
-                    state = req["state"]
-                    moves = legal_move(state)
-
-                    if not moves:
-                        move = [[0, 0], [0, 0]]
-                    else:
-                        _, move = negamax_timeout(state, 25 , 2.9 )
-
-                    message = random.choice(messages)
-
-                    print(move)
-
-                    res = {
-                        "response": "move",
-                        "move": move,
-                        "message": message
-                    }
-
-                    msg = json.dumps(res).encode()
-                    client.sendall(struct.pack('I', len(msg)))
-                    client.sendall(msg)
-
-                except Exception as e:
-                    print("Erreur play:", e)
-                    return
-
-    
-    def loop():
-        s = socket.socket()
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(("0.0.0.0", PORT))
-        s.listen()
-        
-        while True:
-            client, adresse = s.accept()
-            handle_client(client, adresse)
-
-    threading.Thread(target=loop, daemon=True).start()
         
 ####===========Inscrire l'IA au tournoi##===========
 
