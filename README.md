@@ -1,3 +1,4 @@
+<img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/3e4a8190-2dd4-460c-9d99-92de788a64da" />
 # Les Infernales – IA de jeu
 
 Cette intelligence artificielle a été développée pour jouer à Kamisado.
@@ -24,6 +25,7 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 ```
 
 ## Principe de la stratégie
+<img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/42163669-c3a9-4fe7-b558-e15c8b4f6126" />
 
 ![stratégie.jpeg](https://github.com/DemiddeleerEmma/Projet2Ba_Q2_Kamisado/assets/stratégie.jpeg)
 
