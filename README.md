@@ -23,6 +23,13 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 └── README.md            # Documentation du projet
 ```
 
+## Principe de la stratégie
+```
+
+![Description](asserts/stratégie.jpeg)
+
+```
+
 ## bibliothèques utilisées
 
 * socket : communication réseau
