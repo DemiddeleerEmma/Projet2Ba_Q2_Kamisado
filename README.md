@@ -25,7 +25,7 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 
 ## Principe de la stratégie
 
-/asserts/stratégie.jpeg
+![Description](asserts/stratégie.jpeg)
 
 
 ## bibliothèques utilisées
