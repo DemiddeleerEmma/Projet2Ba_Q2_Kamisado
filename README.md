@@ -25,7 +25,7 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 
 ## Principe de la stratégie
 
-![Description](asserts/stratégie.jpeg)
+![stratégie.jpeg](https://github.com/DemiddeleerEmma/Projet2Ba_Q2_Kamisado/assets/)
 
 
 ## bibliothèques utilisées
