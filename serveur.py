@@ -7,50 +7,51 @@ import random
 from stratégie import legal_move, negamax_timeout, messages
 
 ##===========Serveur TCP===========
+def recv_exact(conn, n):
+    data = b""
+    while len(data) < n:
+        packet = conn.recv(n - len(data))
+        if not packet:
+            return None
+        data += packet
+    return data
+
 def start_serveur(port):
+
     def handle_client(client, adresse):
 
         print("Connexion reçue")
 
-        with client:
-            def recv_exact(client, n):
-                data = b""
-                while len(data) < n:
-                    packet = client.recv(n - len(data))
-                    if not packet:
-                        return None
-                    data += packet
-                return data
+        try:
 
-            raw_length = recv_exact(client, 4)
-            if raw_length is None:
-                return
+           with client:
 
-            length = struct.unpack('I', raw_length)[0]
+                raw_length = recv_exact(client, 4)
+                if raw_length is None:
+                    return
 
-            data = recv_exact(client, length)
-            if data is None:
-                return
+                length = struct.unpack('I', raw_length)[0]
 
-            data = data.decode().strip()
-            req = json.loads(data)
+                data = recv_exact(client, length)
+                if data is None:
+                    return
 
-            if req["request"] == "ping":
-                try:
+                data = data.decode().strip()
+                req = json.loads(data)
+
+            #############################
+
+                if req["request"] == "ping":
+
                     res = {"response": "pong"}
                     msg = json.dumps(res).encode()
                     client.sendall(struct.pack('I', len(msg)))
                     client.sendall(msg)
                     print("pong envoyé")
-                except Exception as e:
-                    print("Connexion fermée après ping:", e)
-                    return
 
 
-            elif req["request"] == "play":
-                try:
+                elif req["request"] == "play":
                     print("demande de jeu")
-
                     state = req["state"]
                     moves = legal_move(state)
 
@@ -58,7 +59,6 @@ def start_serveur(port):
                         move = [[0, 0], [0, 0]]
                     else:
                         _, move = negamax_timeout(state, 25 , 2.9 )
-
                     message = random.choice(messages)
 
                     print(move)
@@ -72,10 +72,12 @@ def start_serveur(port):
                     msg = json.dumps(res).encode()
                     client.sendall(struct.pack('I', len(msg)))
                     client.sendall(msg)
-
-                except Exception as e:
-                    print("Erreur play:", e)
-                    return
+                  
+        except Exception as e:
+                
+            print("Connexion fermée après ping:", e)
+        except Exception as e:
+                print("Erreur play:", e)
 
     
     def loop():
@@ -86,6 +88,7 @@ def start_serveur(port):
         
         while True:
             client, adresse = s.accept()
-            handle_client(client, adresse)
+            threading.Thread(target=handle_client, args=(client, adresse), daemon=True).start()
+            #handle_client(client, adresse)
 
     threading.Thread(target=loop, daemon=True).start()
