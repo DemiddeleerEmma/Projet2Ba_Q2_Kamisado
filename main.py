@@ -16,6 +16,7 @@ MATRICULES = ["24164","24374"]
 
 def register(host, port):
     s = socket.socket()
+    s.settimeout(10)
     s.connect((host, port))
 
     message = {

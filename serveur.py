@@ -21,6 +21,7 @@ def start_serveur(port):
     def handle_client(client, adresse):
 
         print("Connexion reçue")
+        client.settimeout(10)
 
         try:
 
