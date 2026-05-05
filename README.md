@@ -65,5 +65,5 @@ python -m pip install -r requirement.txt
 
 <img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/42163669-c3a9-4fe7-b558-e15c8b4f6126" />
 
-\* Ce projet est développé dans le cadre du cours "Advanced Python 2BA", à l’ECAM
+> Ce projet est développé dans le cadre du cours "Advanced Python 2BA", à l’ECAM
 
