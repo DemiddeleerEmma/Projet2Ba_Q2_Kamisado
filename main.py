@@ -4,7 +4,7 @@ import json
 import sys
 import time
 
-from serveur import start_serveur
+from serveur import start_serveur, recv_exact
 
 ##===========configuration===========
 PORT = 8888
@@ -28,14 +28,15 @@ def register(host, port):
     s.sendall(struct.pack('I', len(msg)))
     s.sendall(msg)
 
-    raw_length = s.recv(4)
+    raw_length = recv_exact(s, 4)
 
     if len(raw_length) != 4:
         print("Serveur n'a pas répondu")
         return
 
     length = struct.unpack('I', raw_length)[0]
-    response = s.recv(length).decode()
+    raw_response = recv_exact(s, length)
+    response = raw_response.decode()
     s.close()
 
 ##===========LANCER LE JEU===========
@@ -55,6 +56,7 @@ def main():
         try:
             pass
         except KeyboardInterrupt:
+            print("Déconnexion")
             break
 
 if __name__ == "__main__":
