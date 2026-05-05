@@ -37,6 +37,16 @@ Pour la prise de décision de l’IA, nous utilisons l’algorithme Negamax coup
 └── README.md            # Documentation du projet
 ```
 
+## bibliothèques utilisées
+
+* socket : communication réseau
+* threading : gestion du serveur
+* struct : encodage des messages
+* json : échanges de données
+* time : gestion du temps
+* sys : arguments en ligne de commande
+* random : messages aléatoires
+
 ## Dépendances 
 L'IA a été développée et testée sous Pyhton 3.11.4.
 
@@ -46,24 +56,14 @@ Pour installer les éventuelles dépendances :
 python -m pip install -r requirement.txt
 ```
 
-
-
-
-## Principe megamax
-
-<img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/42163669-c3a9-4fe7-b558-e15c8b4f6126" />
-
-## bibliothèques utilisées
-
-* socket : communication réseau
-* threading : gestion du serveur
-* struct : encodage des messages
-* json : échanges de données
-* random : messages aléatoires
-* time : gestion du temps
-* sys : arguments en ligne de commande
-
 ## Auteurs
 **Noms:** Demiddeleer Emma; Gailly Aurélie
 
 **Matricules:** 24374 et 24164
+
+## organigramme algorithmique de l'IA
+
+<img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/42163669-c3a9-4fe7-b558-e15c8b4f6126" />
+
+\* Ce projet est développé dans le cadre du cours "Advanced Python 2BA", à l’ECAM
+
