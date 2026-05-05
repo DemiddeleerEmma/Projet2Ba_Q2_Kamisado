@@ -1,0 +1,5 @@
+# Dépendances du profet Kamisado
+# Toutes les autres fonctionnalités reposent sur la bibliothèque standard de Python 
+
+pytest
+coverage
