@@ -3,4 +3,8 @@ Aurelie/
 tests.py
 test_main.py
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
 !assets/stratégie.jpeg
