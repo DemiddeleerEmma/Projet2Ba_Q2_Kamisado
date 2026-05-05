@@ -1,4 +1,3 @@
-
 # Les Infernales – IA de jeu
 
 Cette intelligence artificielle a été développée pour jouer à Kamisado.
@@ -15,13 +14,22 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 ## Arborescence du dépôt
 ```
 .
-├── requirements.txt
+├── requirement.txt
 ├── .gitignore
 ├── serveur.py
 ├── stratégie.py
 ├── test_stratégie
 ├── main.py              # Fichier principal : IA + serveur TCP
 └── README.md            # Documentation du projet
+```
+
+## Dépendances 
+L'IA a été développée et testée sous Pyhton 3.11.4.
+
+Pour installer les éventuelles dépendances :
+
+```
+python -m pip install -r requirement.txt
 ```
 
 ## Principe de la stratégie
