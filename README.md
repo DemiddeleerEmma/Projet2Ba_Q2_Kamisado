@@ -57,7 +57,7 @@ python -m pip install -r requirement.txt
 ```
 
 ## Auteurs
-**Noms:** Demiddeleer Emma; Gailly Aurélie
+**Noms:** Demiddeleer Emma & Gailly Aurélie
 
 **Matricules:** 24374 et 24164
 
