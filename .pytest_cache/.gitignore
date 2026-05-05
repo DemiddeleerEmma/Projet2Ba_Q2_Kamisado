@@ -3,9 +3,9 @@ Aurelie/
 tests.py
 test_main.py
 __pycache__/
+.coverage
 *.pyc
 *.pyo
 *.pyd
 .env
-.coverage
 !assets/stratégie.jpeg
