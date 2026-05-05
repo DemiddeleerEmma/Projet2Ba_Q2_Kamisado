@@ -33,8 +33,8 @@ Pour la prise de décision de l’IA, nous utilisons l’algorithme Negamax coup
 ├── serveur.py
 ├── stratégie.py
 ├── test_stratégie
-├── main.py              # Fichier principal : IA + serveur TCP
-└── README.md            # Documentation du projet
+├── main.py            
+└── README.md   
 ```
 
 ## bibliothèques utilisées
