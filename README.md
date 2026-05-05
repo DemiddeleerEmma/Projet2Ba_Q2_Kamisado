@@ -11,6 +11,20 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 * Deepening progressif : amélioration continue du coup tant que le temps le permet.
 * Gestion du temps : limite de calcul (~2.5 secondes) avec arrêt sécurisé.
 
+## Principe de la stratégie
+
+Pour la prise de décision de l’IA, nous utilisons l’algorithme Negamax couplé à l’élagage alpha‑beta, une optimisation du Minimax permettant d’explorer efficacement l’arbre des coups tout en réduisant drastiquement le nombre d’états évalués. L’évaluation d’un coup repose sur plusieurs critères positionnels et stratégiques, détaillés ci‑dessous : 
+
+* **Détection immédiate de victoire :** priorité absolue si une pièce atteint la ligne d’arrivée.
+
+* **Avancement des pièces :** bonus croissant selon la progression vers la zone adverse.
+
+* **Contrôle du centre :** bonus supplémentaire pour les pièces situées dans les colonnes centrales.
+
+* **Liberté d’avancement :** points pour chaque case libre devant une pièce dans sa direction de déplacement.
+
+* **Mobilité globale :** avantage proportionnel à la différence de coups légaux entre dark et light.
+
 ## Arborescence du dépôt
 ```
 .
@@ -32,7 +46,10 @@ Pour installer les éventuelles dépendances :
 python -m pip install -r requirement.txt
 ```
 
-## Principe de la stratégie
+
+
+
+## Principe megamax
 
 <img width="439" height="1600" alt="stratégie" src="https://github.com/user-attachments/assets/42163669-c3a9-4fe7-b558-e15c8b4f6126" />
 
