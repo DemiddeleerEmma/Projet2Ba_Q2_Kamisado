@@ -5,6 +5,17 @@ import json
 import random
 from stratégie import legal_move, negamax_timeout, messages
 
+#######################
+
+def recv_exact(client, n):
+    data = b""
+    while len(data) < n:
+        packet = client.recv(n - len(data))
+        if not packet:
+            return None
+        data += packet
+    return data
+
 ##===========Serveur TCP===========
 
 def start_serveur(port):
@@ -14,14 +25,7 @@ def start_serveur(port):
 
         with client:
 
-            def recv_exact(client, n):
-                data = b""
-                while len(data) < n:
-                    packet = client.recv(n - len(data))
-                    if not packet:
-                        return None
-                    data += packet
-                return data
+
             
             raw_length = recv_exact(client, 4)
 
@@ -71,17 +75,17 @@ def start_serveur(port):
                     }
                     msg = json.dumps(res).encode()
                     client.sendall(struct.pack('I', len(msg)) + msg )
+                    client.shutdown(socket.SHUT_RDWR)
 
                 except Exception as e:
                     print("Erreur play:", e)
                     return
 
     def loop():
-
-        s = socket.socket()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(("0.0.0.0", port))
-        s.listen()
+        s.bind(("127.0.0.1", port)) 
+        s.listen(5) 
 
         while True:
             client, adresse = s.accept()

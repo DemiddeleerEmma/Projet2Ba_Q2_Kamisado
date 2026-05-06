@@ -3,7 +3,7 @@ import struct
 import json
 import sys
 import time
-from serveur import start_serveur
+from serveur import start_serveur, recv_exact
 
 ##===========configuration===========
 
@@ -25,16 +25,29 @@ def register(host, port):
     }
 
     msg = json.dumps(message).encode()
-    s.sendall(struct.pack('I', len(msg)))
-    s.sendall(msg)
-    raw_length = s.recv(4)
+    s.sendall(struct.pack('I', len(msg)) + msg)
+    raw_length = recv_exact(s, 4)
+
+    if raw_length is None:
+        print("Pas de réponse du serveur")
+        s.close()
+        return
 
     if len(raw_length) != 4:
         print("Serveur n'a pas répondu")
         return
     
     length = struct.unpack('I', raw_length)[0]
-    response = s.recv(length).decode()
+
+    response_data = recv_exact(s, length)
+
+    if response_data is None:
+        print("Réponse incomplète")
+        s.close()
+        return
+
+    response = response_data.decode()
+    s.shutdown(socket.SHUT_RDWR)
     s.close()
 
 ##===========LANCER LE JEU===========
