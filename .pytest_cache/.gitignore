@@ -1,6 +1,11 @@
 # Created by pytest automatically.
-*Aurelie
-*tests.py
-*test_main.py
-*__pycache__
+Aurelie/
+tests.py
+test_main.py
+__pycache__/
+.coverage
+*.pyc
+*.pyo
+*.pyd
+.env
 !assets/stratégie.jpeg
