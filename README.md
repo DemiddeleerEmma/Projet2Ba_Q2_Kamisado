@@ -9,7 +9,7 @@ Elle repose sur une stratégie combinant recherche algorithmique (Negamax), heur
 * Évaluation heuristique : l'IA score les mouvements possible selon la progression des pièces sur le plateau, le contrôle du centre et la mobilité.
 * Algorithme Negamax avec élagage alpha-bêta : exploration optimisée de l’arbre de jeu.
 * Deepening progressif : amélioration continue du coup tant que le temps le permet.
-* Gestion du temps : limite de calcul (~2.5 secondes) avec arrêt sécurisé.
+* Gestion du temps : limite de calcul (~2.8 secondes) avec arrêt sécurisé.
 
 ## Principe de la stratégie
 
