@@ -29,7 +29,7 @@ Pour la prise de décision de l’IA, nous utilisons l’algorithme Negamax coup
 ```
 .
 ├── requirement.txt
-├── .gitignore
+├── .pytest_cache
 ├── serveur.py
 ├── stratégie.py
 ├── test_stratégie
